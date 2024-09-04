@@ -5,3 +5,15 @@
   display: flex;
   background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
 }
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(136, 136, 136, 0.281);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
