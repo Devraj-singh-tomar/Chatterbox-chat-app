@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { ChatState } from "../context/ChatProvider";
 import { Box } from "@chakra-ui/react";
 import SideDrawer from "../components/miscellaneous/SideDrawer";
@@ -7,6 +7,9 @@ import ChatBox from "../components/ChatBox";
 
 const ChatPage = () => {
   const { user } = ChatState();
+
+  //this is used to refetch chatlist if there is any changes
+  const [fetchAgain, setFetchAgain] = useState(false);
 
   return (
     <div
@@ -20,12 +23,14 @@ const ChatPage = () => {
         display={"flex"}
         justifyContent={"space-between"}
         width={"100%"}
-        h={"91vh"}
+        h={"88vh"}
         p={"10px"}
       >
-        {user && <MyChats />}
+        {user && <MyChats fetchAgain={fetchAgain} />}
 
-        {user && <ChatBox />}
+        {user && (
+          <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+        )}
       </Box>
     </div>
   );
