@@ -28,6 +28,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ChatLoading from "../ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
+import { getSender } from "../../config/ChatLogics";
+import { Effect } from "react-notification-badge";
+import NotificationBadge from "react-notification-badge";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -40,7 +43,14 @@ const SideDrawer = () => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { user, setSelectedChat, chats, setChats } = ChatState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notification,
+    setNotification,
+  } = ChatState();
 
   const loginHandler = () => {
     localStorage.removeItem("userInfo");
@@ -187,9 +197,36 @@ const SideDrawer = () => {
         <div>
           <Menu>
             <MenuButton p={3}>
+              {/* notification badge */}
+
+              <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+                style={{ width: "20px", height: "20px", fontSize: "12px" }}
+              />
               <BellIcon fontSize={20} m={1} />
             </MenuButton>
-            {/* <MenuList></MenuList> */}
+            {/* rendering notifications */}
+
+            <MenuList pl={2}>
+              {!notification.length && "No new messages!"}
+              {notification.map((notif) => (
+                <MenuItem
+                  key={notif._id}
+                  // redirect to the selected chat
+                  onClick={() => {
+                    setSelectedChat(notif.chat);
+
+                    // remove particular notification from array of notification
+                    setNotification(notification.filter((n) => n !== notif));
+                  }}
+                >
+                  {notif.chat.isGroupChat
+                    ? `New message in ${notif.chat.chatName}`
+                    : `New message from ${getSender(user, notif.chat.users)} `}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
 
           <Menu>
